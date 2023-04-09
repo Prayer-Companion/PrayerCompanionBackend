@@ -33,10 +33,12 @@ prayerTimesRouter.get('/prayerTimes',
         const result: DailyPrayers[] = []
 
         for (let currentDay = 1; currentDay <= monthLastDay; currentDay++) {
-            const prayerTimes = new PrayerTimes(coordinates, date.toDate(), params);
+            const currentDate = date.clone().date(currentDay)
+
+            const prayerTimes = new PrayerTimes(coordinates, currentDate.toDate(), params);
 
             result.push({
-                'date': date.clone().date(currentDay).format(dateFormat),
+                'date': currentDate.format(dateFormat),
                 'fajr': moment(prayerTimes.fajr).tz(query.timeZone).format(timeFormat),
                 // 'sunrise': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
                 'dhuhr': moment(prayerTimes.dhuhr).tz(query.timeZone).format(timeFormat),
