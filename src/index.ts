@@ -8,11 +8,15 @@ import path from "path";
 
 dotenv.config();
 
+const rootPath = path.join(__dirname, '..')
+
 const app: Express = express();
 const httpsPort = process.env.HTTPS_PORT;
 const httpPort = process.env.HTTP_PORT;
 
-app.use(express.static(path.join(process.cwd() , 'static'), {dotfiles: 'allow'}))
+app.use(express.static(path.join(rootPath, 'static'), {dotfiles: 'allow'}))
+
+console.log(path.join(rootPath, 'static'))
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');
@@ -26,12 +30,12 @@ http.createServer(app).listen(80, () => {
 
 // https.createServer(
 //     {
-//         key: fs.readFileSync('/etc/letsencrypt/path/to/key.pem'),
-//         cert: fs.readFileSync('/etc/letsencrypt/path/to/cert.pem'),
-//         ca: fs.readFileSync('/etc/letsencrypt/path/to/chain.pem'),
+//         key: fs.readFileSync(path.join(rootPath, '/etc/letsencrypt/path/to/key.pem')),
+//         cert: fs.readFileSync(path.join(rootPath, '/etc/letsencrypt/path/to/cert.pem')),
+//         ca: fs.readFileSync(path.join(rootPath, '/etc/letsencrypt/path/to/chain.pem')),
 //     },
 //     app
-// ).listen(port, () => {
+// ).listen(httpsPort, () => {
 //         console.log(`⚡️[server]: Server is running at https://localhost:${httpsPort}`);
 //     }
 // )
