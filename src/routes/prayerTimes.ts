@@ -3,7 +3,7 @@ import {query, validationResult} from 'express-validator';
 import {CalculationMethod, Coordinates, PrayerTimes} from 'adhan';
 import {ParamsDictionary} from 'express-serve-static-core';
 import {StatusCodes} from 'http-status-codes';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 export const prayerTimesRouter = Router()
 
@@ -11,7 +11,7 @@ const dateFormat = 'DD/MM/YYYY'
 const timeFormat = 'hh:mm a'
 
 prayerTimesRouter.get('/prayerTimes',
-    query('country').isString(),
+    query('timeZone').isString(),
     query('latitude').isNumeric(),
     query('longitude').isNumeric(),
     query('longitude').isNumeric(),
@@ -37,13 +37,13 @@ prayerTimesRouter.get('/prayerTimes',
 
             result.push({
                 'date': date.clone().date(currentDay).format(dateFormat),
-                'fajr': moment(prayerTimes.fajr).format(timeFormat),
-                // 'sunrise': moment(prayerTimes.sunrise).format(timeFormat),
-                'dhuhr': moment(prayerTimes.dhuhr).format(timeFormat),
-                'asr': moment(prayerTimes.asr).format(timeFormat),
-                // 'sunset': moment(prayerTimes.sunrise).format(timeFormat),
-                'maghrib': moment(prayerTimes.maghrib).format(timeFormat),
-                'isha': moment(prayerTimes.isha).format(timeFormat),
+                'fajr': moment(prayerTimes.fajr).tz(query.timeZone).format(timeFormat),
+                // 'sunrise': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
+                'dhuhr': moment(prayerTimes.dhuhr).tz(query.timeZone).format(timeFormat),
+                'asr': moment(prayerTimes.asr).tz(query.timeZone).format(timeFormat),
+                // 'sunset': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
+                'maghrib': moment(prayerTimes.maghrib).tz(query.timeZone).format(timeFormat),
+                'isha': moment(prayerTimes.isha).tz(query.timeZone).format(timeFormat),
             })
         }
 
@@ -54,7 +54,7 @@ type PrayerTimesRequest = Request<ParamsDictionary, any, any, Query>
 type PrayerTimesResponse = Response
 
 interface Query {
-    country: string,
+    timeZone: string,
     latitude: number,
     longitude: number,
     date: string;
