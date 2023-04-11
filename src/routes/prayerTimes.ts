@@ -8,14 +8,14 @@ import moment from 'moment-timezone';
 export const prayerTimesRouter = Router()
 
 const dateFormat = 'DD/MM/YYYY'
-const timeFormat = 'hh:mm a'
+const timeFormat = 'HH:mm'
 
 prayerTimesRouter.get('/prayerTimes',
     query('timeZone').isString(),
     query('latitude').isNumeric(),
     query('longitude').isNumeric(),
     query('longitude').isNumeric(),
-    query('date').isDate({format: dateFormat}),
+    query('monthOfYear').isString().matches("^(0[1-9]|1[0-2])\\/\\d{4}$"),
     (req: PrayerTimesRequest, res: PrayerTimesResponse) => {
         const errors = validationResult(req)
 
@@ -27,7 +27,9 @@ prayerTimesRouter.get('/prayerTimes',
         const coordinates = new Coordinates(query.latitude, query.longitude);
         const params = CalculationMethod.MoonsightingCommittee();
 
-        const date = moment(query.date, dateFormat)
+
+        const date = moment(`01/${query.monthOfYear}`, dateFormat)
+
         const monthLastDay = date.clone().endOf('month').date()
 
         const result: DailyPrayers[] = []
@@ -59,7 +61,7 @@ interface Query {
     timeZone: string,
     latitude: number,
     longitude: number,
-    date: string;
+    monthOfYear: string;
 }
 
 interface DailyPrayers {
