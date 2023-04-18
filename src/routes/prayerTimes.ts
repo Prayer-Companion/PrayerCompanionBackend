@@ -42,7 +42,7 @@ prayerTimesRouter.get('/prayerTimes',
             result.push({
                 'date': currentDate.format(dateFormat),
                 'fajr': moment(prayerTimes.fajr).tz(query.timeZone).format(timeFormat),
-                // 'sunrise': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
+                'sunrise': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
                 'dhuhr': moment(prayerTimes.dhuhr).tz(query.timeZone).format(timeFormat),
                 'asr': moment(prayerTimes.asr).tz(query.timeZone).format(timeFormat),
                 // 'sunset': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
@@ -67,6 +67,7 @@ interface Query {
 interface DailyPrayers {
     date: string
     'fajr': string,
+    'sunrise': string
     'dhuhr': string,
     'asr': string,
     'maghrib': string,
