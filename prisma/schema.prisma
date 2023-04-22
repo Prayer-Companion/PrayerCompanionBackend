@@ -11,44 +11,48 @@ datasource db {
 }
 
 model User {
-  id          Int    @id @default(autoincrement())
-  firebaseUid String @unique
+  id         Int    @id @default(autoincrement())
+  firebaseId String @unique
 
   PrayerRecord PrayerRecord[]
 }
 
 model PrayerRecord {
   id     Int      @id @default(autoincrement())
-  userId Int      @unique
+  userId Int
   date   DateTime
 
   user User @relation(fields: [userId], references: [id])
 
   PrayerStatus PrayerStatus[]
+
+  @@unique([userId, date])
 }
 
 model PrayerStatus {
-  id             Int            @id @default(autoincrement())
-  prayerRecordId Int            @unique
-  prayerName     PrayerNames
-  prayerStatus   PrayerStatuses @default(None)
+  id       Int            @id @default(autoincrement())
+  recordId Int
+  name     PrayerNames
+  status   PrayerStatuses @default(none)
 
-  prayerRecord PrayerRecord @relation(fields: [prayerRecordId], references: [id])
+  prayerRecord PrayerRecord @relation(fields: [recordId], references: [id])
+
+  @@unique([recordId, name])
 }
 
 enum PrayerStatuses {
-  Jamaah
-  OnTime
-  Late
-  Missed
-  Qadaa
-  None
+  jamaah
+  onTime
+  late
+  missed
+  qadaa
+  none
 }
 
 enum PrayerNames {
-  Fajr
-  Dhuhr
-  Asr
-  Maghrib
-  Isha
+  fajr
+  dhuhr
+  asr
+  maghrib
+  isha
 }

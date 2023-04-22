@@ -4,6 +4,7 @@ import {CalculationMethod, Coordinates, PrayerTimes} from 'adhan';
 import {ParamsDictionary} from 'express-serve-static-core';
 import {StatusCodes} from 'http-status-codes';
 import moment from 'moment-timezone';
+import {validateTimeZone} from "../customValidators";
 
 export const prayerTimesRouter = Router()
 
@@ -11,7 +12,7 @@ const dateFormat = 'DD/MM/YYYY'
 const timeFormat = 'HH:mm'
 
 prayerTimesRouter.get('/prayerTimes',
-    query('timeZone').isString(),
+    query('timeZone').custom(validateTimeZone),
     query('latitude').isNumeric(),
     query('longitude').isNumeric(),
     query('longitude').isNumeric(),

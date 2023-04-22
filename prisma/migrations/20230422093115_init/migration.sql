@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `firebaseUid` VARCHAR(191) NOT NULL,
+    `firebaseId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `User_firebaseUid_key`(`firebaseUid`),
+    UNIQUE INDEX `User_firebaseId_key`(`firebaseId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -13,18 +13,18 @@ CREATE TABLE `PrayerRecord` (
     `userId` INTEGER NOT NULL,
     `date` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `PrayerRecord_userId_key`(`userId`),
+    UNIQUE INDEX `PrayerRecord_userId_date_key`(`userId`, `date`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `PrayerStatus` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `prayerRecordId` INTEGER NOT NULL,
-    `prayerName` ENUM('Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha') NOT NULL,
-    `prayerStatus` ENUM('Jamaah', 'OnTime', 'Late', 'Missed', 'Qadaa', 'None') NOT NULL DEFAULT 'None',
+    `recordId` INTEGER NOT NULL,
+    `name` ENUM('fajr', 'dhuhr', 'asr', 'maghrib', 'isha') NOT NULL,
+    `status` ENUM('jamaah', 'onTime', 'late', 'missed', 'qadaa', 'none') NOT NULL DEFAULT 'none',
 
-    UNIQUE INDEX `PrayerStatus_prayerRecordId_key`(`prayerRecordId`),
+    UNIQUE INDEX `PrayerStatus_recordId_name_key`(`recordId`, `name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -32,4 +32,4 @@ CREATE TABLE `PrayerStatus` (
 ALTER TABLE `PrayerRecord` ADD CONSTRAINT `PrayerRecord_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `PrayerStatus` ADD CONSTRAINT `PrayerStatus_prayerRecordId_fkey` FOREIGN KEY (`prayerRecordId`) REFERENCES `PrayerRecord`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `PrayerStatus` ADD CONSTRAINT `PrayerStatus_recordId_fkey` FOREIGN KEY (`recordId`) REFERENCES `PrayerRecord`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
