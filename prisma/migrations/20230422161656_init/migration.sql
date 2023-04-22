@@ -21,7 +21,7 @@ CREATE TABLE `PrayerRecord` (
 CREATE TABLE `PrayerStatus` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `recordId` INTEGER NOT NULL,
-    `name` ENUM('fajr', 'dhuhr', 'asr', 'maghrib', 'isha') NOT NULL,
+    `name` ENUM('fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha') NOT NULL,
     `status` ENUM('jamaah', 'onTime', 'late', 'missed', 'qadaa', 'none') NOT NULL DEFAULT 'none',
 
     UNIQUE INDEX `PrayerStatus_recordId_name_key`(`recordId`, `name`),

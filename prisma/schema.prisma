@@ -51,6 +51,7 @@ enum PrayerStatuses {
 
 enum PrayerNames {
   fajr
+  sunrise
   dhuhr
   asr
   maghrib

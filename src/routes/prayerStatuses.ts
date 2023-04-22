@@ -6,6 +6,7 @@ import moment from "moment-timezone";
 import {daysBetween, loopBetweenDates} from "../utils/dateUtils";
 import {StatusCodes} from "http-status-codes";
 import {validateTimeZone} from "../customValidators";
+import DailyPrayers from "../models/dailyPrayers";
 
 const prisma = new PrismaClient()
 
@@ -57,7 +58,7 @@ prayerStatusesRouter.get('/user/:userId/prayerStatuses',
 
 
         //Format response
-        const result: ResponseItem[] = []
+        const result: DailyPrayers[] = []
 
         loopBetweenDates(
             {date: startDate, inclusive: true},
@@ -66,6 +67,7 @@ prayerStatusesRouter.get('/user/:userId/prayerStatuses',
                 result.push({
                     date: moment(date).tz(timeZone).format(dateFormat),
                     fajr: 'none',
+                    sunrise: 'none',
                     dhuhr: 'none',
                     asr: 'none',
                     maghrib: 'none',
@@ -154,14 +156,4 @@ prayerStatusesRouter.put(
         })
 
         return res.json(prayerStatuses)
-
     })
-
-interface ResponseItem {
-    date: string
-    'fajr': PrayerStatuses,
-    'dhuhr': PrayerStatuses,
-    'asr': PrayerStatuses,
-    'maghrib': PrayerStatuses,
-    'isha': PrayerStatuses,
-}

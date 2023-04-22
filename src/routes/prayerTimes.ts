@@ -5,6 +5,7 @@ import {ParamsDictionary} from 'express-serve-static-core';
 import {StatusCodes} from 'http-status-codes';
 import moment from 'moment-timezone';
 import {validateTimeZone} from "../customValidators";
+import DailyPrayers from "../models/dailyPrayers";
 
 export const prayerTimesRouter = Router()
 
@@ -17,7 +18,14 @@ prayerTimesRouter.get('/prayerTimes',
     query('longitude').isNumeric(),
     query('longitude').isNumeric(),
     query('monthOfYear').isString().matches("^(0[1-9]|1[0-2])\\/\\d{4}$"),
-    (req: PrayerTimesRequest, res: PrayerTimesResponse) => {
+    (
+        req: Request<ParamsDictionary, any, any, {
+            timeZone: string,
+            latitude: number,
+            longitude: number,
+            monthOfYear: string;
+        }>,
+        res: Response) => {
         const errors = validationResult(req)
 
         if (!errors.isEmpty()) {
@@ -46,7 +54,6 @@ prayerTimesRouter.get('/prayerTimes',
                 'sunrise': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
                 'dhuhr': moment(prayerTimes.dhuhr).tz(query.timeZone).format(timeFormat),
                 'asr': moment(prayerTimes.asr).tz(query.timeZone).format(timeFormat),
-                // 'sunset': moment(prayerTimes.sunrise).tz(query.timeZone).format(timeFormat),
                 'maghrib': moment(prayerTimes.maghrib).tz(query.timeZone).format(timeFormat),
                 'isha': moment(prayerTimes.isha).tz(query.timeZone).format(timeFormat),
             })
@@ -54,23 +61,3 @@ prayerTimesRouter.get('/prayerTimes',
 
         res.json(result)
     })
-
-type PrayerTimesRequest = Request<ParamsDictionary, any, any, Query>
-type PrayerTimesResponse = Response
-
-interface Query {
-    timeZone: string,
-    latitude: number,
-    longitude: number,
-    monthOfYear: string;
-}
-
-interface DailyPrayers {
-    date: string
-    'fajr': string,
-    'sunrise': string
-    'dhuhr': string,
-    'asr': string,
-    'maghrib': string,
-    'isha': string
-}
