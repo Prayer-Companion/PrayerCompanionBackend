@@ -5,7 +5,6 @@ import {PrayerNames, PrayerStatuses, PrismaClient} from '@prisma/client'
 import moment from "moment-timezone";
 import {daysBetween, loopBetweenDates} from "../utils/dateUtils";
 import {StatusCodes} from "http-status-codes";
-import {validateTimeZone} from "../customValidators";
 import DailyPrayers from "../models/dailyPrayers";
 
 const prisma = new PrismaClient()
@@ -32,12 +31,10 @@ const getPrayerStatuses = async (userId: number, startDate: Date, endDate: Date)
 }
 
 prayerStatusesRouter.get('/user/prayerStatuses',
-    query('timeZone').custom(validateTimeZone),
     query('startDate').isDate({format: dateFormat}),
     query('endDate').isDate({format: dateFormat}),
     async (
         req: Request<ParamsDictionary, any, any, {
-            timeZone: string,
             startDate: string,
             endDate: string,
         }>,
@@ -50,9 +47,8 @@ prayerStatusesRouter.get('/user/prayerStatuses',
         }
 
         const userId: number = req.userId
-        const timeZone = req.query.timeZone
-        const startDate = moment.tz(req.query.startDate, dateFormat, timeZone).toDate()
-        const endDate = moment.tz(req.query.endDate, dateFormat, timeZone).toDate()
+        const startDate = moment.utc(req.query.startDate, dateFormat).toDate()
+        const endDate = moment.utc(req.query.endDate, dateFormat).toDate()
 
         const prayerStatuses = await getPrayerStatuses(userId, startDate, endDate)
 
@@ -65,7 +61,7 @@ prayerStatusesRouter.get('/user/prayerStatuses',
             {date: endDate, inclusive: true},
             date => {
                 result.push({
-                    date: moment(date).tz(timeZone).format(dateFormat),
+                    date: moment(date).utc().format(dateFormat),
                     fajr: 'none',
                     sunrise: 'none',
                     dhuhr: 'none',
@@ -88,7 +84,6 @@ prayerStatusesRouter.get('/user/prayerStatuses',
 
 prayerStatusesRouter.put(
     '/user/prayerStatus',
-    query('timeZone').custom(validateTimeZone),
     query('date').isDate({format: dateFormat}),
     query('prayerName').custom(async value => {
         if (!(value in PrayerNames)) {
@@ -102,7 +97,6 @@ prayerStatusesRouter.put(
     }),
     async (
         req: Request<ParamsDictionary, any, any, {
-            timeZone: string,
             date: string
             prayerName: PrayerNames,
             prayerStatus: PrayerStatuses
@@ -114,10 +108,9 @@ prayerStatusesRouter.put(
             return res.status(StatusCodes.BAD_REQUEST).json(errors)
         }
 
-        const timeZone = req.query.timeZone
         const userId = req.userId
         const query = req.query
-        const date = moment.tz(query.date, dateFormat, timeZone).toDate()
+        const date = moment.utc(query.date, dateFormat).toDate()
 
         const prayerRecord = await prisma.prayerRecord.upsert({
             create: {
@@ -152,7 +145,7 @@ prayerStatusesRouter.put(
                 status: query.prayerStatus,
                 recordId: prayerRecord.id
             },
-            // include: {prayerRecord: true},
+            include: {prayerRecord: true},
         })
 
         return res.json(prayerStatuses)
