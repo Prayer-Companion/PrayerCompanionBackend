@@ -31,7 +31,7 @@ const getPrayerStatuses = async (userId: number, startDate: Date, endDate: Date)
     });
 }
 
-prayerStatusesRouter.get('/user/:userId/prayerStatuses',
+prayerStatusesRouter.get('/user/prayerStatuses',
     query('timeZone').custom(validateTimeZone),
     query('startDate').isDate({format: dateFormat}),
     query('endDate').isDate({format: dateFormat}),
@@ -49,7 +49,7 @@ prayerStatusesRouter.get('/user/:userId/prayerStatuses',
             return res.status(StatusCodes.BAD_REQUEST).json(errors)
         }
 
-        const userId: number = parseInt(req.params.userId)
+        const userId: number = req.userId
         const timeZone = req.query.timeZone
         const startDate = moment.tz(req.query.startDate, dateFormat, timeZone).toDate()
         const endDate = moment.tz(req.query.endDate, dateFormat, timeZone).toDate()
@@ -87,7 +87,7 @@ prayerStatusesRouter.get('/user/:userId/prayerStatuses',
 )
 
 prayerStatusesRouter.put(
-    '/user/:userId/prayerStatus',
+    '/user/prayerStatus',
     query('timeZone').custom(validateTimeZone),
     query('date').isDate({format: dateFormat}),
     query('prayerName').custom(async value => {
@@ -115,7 +115,7 @@ prayerStatusesRouter.put(
         }
 
         const timeZone = req.query.timeZone
-        const userId = parseInt(req.params!!.userId)
+        const userId = req.userId
         const query = req.query
         const date = moment.tz(query.date, dateFormat, timeZone).toDate()
 
