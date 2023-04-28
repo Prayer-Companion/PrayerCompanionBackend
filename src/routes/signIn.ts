@@ -5,8 +5,8 @@ export const signInRouter = Router()
 
 const prisma = new PrismaClient()
 
-signInRouter.put('/user/signIn', (req, res) => {
-    prisma.user.upsert({
+signInRouter.put('/user/signIn', async(req, res) => {
+    await prisma.user.upsert({
         where: {
             firebaseId: req.decodedIdToken.uid
         },
