@@ -75,7 +75,7 @@ async function getStoredDailyPrayerTimes(countryCode: string, cityName: string, 
                 fs.createReadStream(filePath)
                     .pipe(parse({
                         delimiter: ",",
-                        fromLine: daysBetween(startOfYearDate, startDate.toDate()),
+                        fromLine: daysBetween(startOfYearDate, startDate.toDate()) + 1,
                         toLine: daysBetween(startOfYearDate, endDate)
                     }))
                     .on('data', line => {
