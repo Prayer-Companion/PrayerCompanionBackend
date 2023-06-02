@@ -43,6 +43,7 @@ model PrayerStatus {
 enum PrayerStatuses {
   jamaah
   onTime
+  afterHalfTime
   late
   missed
   qadaa

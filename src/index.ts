@@ -5,7 +5,9 @@ import {prayerStatusesRouter} from "./routes/prayerStatuses";
 import {verifyIdToken} from "./middlewares/verifyToken";
 import {signInRouter} from "./routes/signIn";
 import {verifyUserCreated} from "./middlewares/verifyUserCreated";
+import path from 'path'
 
+global.appRoot = path.resolve('./')
 dotenv.config();
 
 const app: Express = express();
