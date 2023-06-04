@@ -14,7 +14,8 @@ model User {
   id         Int    @id @default(autoincrement())
   firebaseId String @unique
 
-  PrayerRecord PrayerRecord[]
+  prayerRecord    PrayerRecord[]
+  prayerSurahAyat PrayerSurahAyat[]
 }
 
 model PrayerRecord {
@@ -24,7 +25,7 @@ model PrayerRecord {
 
   user User @relation(fields: [userId], references: [id])
 
-  PrayerStatus PrayerStatus[]
+  prayerStatus PrayerStatus[]
 
   @@unique([userId, date])
 }
@@ -38,6 +39,17 @@ model PrayerStatus {
   prayerRecord PrayerRecord @relation(fields: [recordId], references: [id])
 
   @@unique([recordId, name])
+}
+
+model PrayerSurahAyat {
+  userId   Int
+  surahId  Int
+  startAya Int
+  endAya   Int
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@id([userId, surahId])
 }
 
 enum PrayerStatuses {
