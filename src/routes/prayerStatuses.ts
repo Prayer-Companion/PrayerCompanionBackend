@@ -14,20 +14,25 @@ export const prayerStatusesRouter = Router()
 const dateFormat = 'DD/MM/YYYY'
 
 const getPrayerStatuses = async (userId: number, startDate: Date, endDate: Date) => {
-    return prisma.prayerStatus.findMany({
-        where: {
-            prayerRecord: {
-                userId: userId,
-                date: {
-                    gte: startDate,
-                    lte: endDate,
+    try {
+        return prisma.prayerStatus.findMany({
+            where: {
+                prayerRecord: {
+                    userId: userId,
+                    date: {
+                        gte: startDate,
+                        lte: endDate,
+                    }
                 }
+            },
+            include: {
+                prayerRecord: true
             }
-        },
-        include: {
-            prayerRecord: true
-        }
-    });
+        });
+    } catch (e) {
+        console.log(e)
+        return []
+    }
 }
 
 prayerStatusesRouter.get('/user/prayerStatuses',
@@ -112,41 +117,46 @@ prayerStatusesRouter.put(
         const query = req.query
         const date = moment.utc(query.date, dateFormat).toDate()
 
-        const prayerRecord = await prisma.prayerRecord.upsert({
-            create: {
-                user: {
-                    connect: {
-                        id: userId
+        try {
+            const prayerRecord = await prisma.prayerRecord.upsert({
+                create: {
+                    user: {
+                        connect: {
+                            id: userId
+                        }
+                    },
+                    date: date
+                },
+                update: {},
+                where: {
+                    userId_date: {
+                        userId: userId,
+                        date: date
                     }
                 },
-                date: date
-            },
-            update: {},
-            where: {
-                userId_date: {
-                    userId: userId,
-                    date: date
-                }
-            },
-        })
+            })
 
-        const prayerStatuses = await prisma.prayerStatus.upsert({
-            where: {
-                recordId_name: {
-                    recordId: prayerRecord.id,
+            const prayerStatuses = await prisma.prayerStatus.upsert({
+                where: {
+                    recordId_name: {
+                        recordId: prayerRecord.id,
+                        name: query.prayerName,
+                    }
+                },
+                update: {
+                    status: query.prayerStatus,
+                },
+                create: {
                     name: query.prayerName,
-                }
-            },
-            update: {
-                status: query.prayerStatus,
-            },
-            create: {
-                name: query.prayerName,
-                status: query.prayerStatus,
-                recordId: prayerRecord.id
-            },
-            include: {prayerRecord: true},
-        })
+                    status: query.prayerStatus,
+                    recordId: prayerRecord.id
+                },
+                include: {prayerRecord: true},
+            })
 
-        return res.json(prayerStatuses)
+            return res.json(prayerStatuses)
+        } catch (e) {
+            console.log(e)
+            return res.status(StatusCodes.BAD_REQUEST).json('Something went wrong during updating prayerStatus')
+        }
     })

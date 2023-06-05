@@ -10,24 +10,22 @@ export const verifyUserCreated = async (req: Request, res: Response, next: NextF
         return next()
     }
 
-    const firebaseUid = req.decodedIdToken.uid
+    try {
+        const firebaseUid = req.decodedIdToken.uid
 
-    console.log(`UID: ${firebaseUid}`)
+        const user = await prisma.user.findUnique({
+            where: {
+                firebaseId: firebaseUid
+            }
+        })
 
-    const user = await prisma.user.findUnique({
-        where: {
-            firebaseId: firebaseUid
+        if (!user) {
+            return res.status(StatusCodes.UNAUTHORIZED).json("User doesn't exist in the database")
         }
-    })
-
-    console.log(`user: ${user?.id}`)
-
-    if (!user) {
-        return res.status(StatusCodes.UNAUTHORIZED).json("User doesn't exist in the database")
+    } catch (e) {
+        console.log(e)
+        return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during user checking")
     }
 
-    req.userId = user.id
-
-    return next()
 }
 
