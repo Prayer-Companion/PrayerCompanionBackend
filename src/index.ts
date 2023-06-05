@@ -8,6 +8,7 @@ import {verifyUserCreated} from "./middlewares/verifyUserCreated";
 import path from 'path'
 import {prayerSurahAyatRouter} from "./routes/prayerSurahAyat";
 import {queryParser} from "express-query-parser";
+import {quranReadingSectionsRouter} from "./routes/quranReadingSections";
 
 global.appRoot = path.resolve('./')
 dotenv.config();
@@ -26,6 +27,7 @@ app.use('/v1', signInRouter)
 app.use('/v1', prayerTimesRouter)
 app.use('/v1', prayerStatusesRouter)
 app.use('/v1/user/prayerSurahAyat', prayerSurahAyatRouter)
+app.use('/v1/user/quranReadingSections' , quranReadingSectionsRouter)
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

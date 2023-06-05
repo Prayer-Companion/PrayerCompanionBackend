@@ -1,3 +1,5 @@
+import {getElementAt} from "./arrayUtils";
+
 const surahAyatPrefixSum: number[][] = require('../../rawData/quran_ayat_length_as_prefix_sum.json')
 
 export default class SurahUtils {
@@ -9,8 +11,13 @@ export default class SurahUtils {
         return SurahUtils.getSurahPrefixSum(surahId).length
     }
 
-    public static getNumberOfCharsInAya(surahId: number, ayaNumber: number) {
-        return SurahUtils.getSurahPrefixSum(surahId)[ayaNumber - 1]
+    public static getNumberOfCharsBetween2Ayat(surahId: number, startAya: number, endAya: number) {
+        const surahPrefixSum = SurahUtils.getSurahPrefixSum(surahId)
+
+        const startAyaBase0 = startAya - 1
+        const endAyaBase0 = endAya - 1
+
+        return getElementAt(surahPrefixSum, endAyaBase0, 0) - getElementAt(surahPrefixSum, startAyaBase0 - 1, 0)
     }
 
     public static isSurahIdValid(surahId: number) {
