@@ -22,6 +22,10 @@ export const verifyUserCreated = async (req: Request, res: Response, next: NextF
         if (!user) {
             return res.status(StatusCodes.UNAUTHORIZED).json("User doesn't exist in the database")
         }
+
+        req.userId = user.id
+        return next()
+
     } catch (e) {
         console.log(e)
         return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during user checking")
