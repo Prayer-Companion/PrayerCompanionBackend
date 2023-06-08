@@ -101,3 +101,39 @@ prayerSurahAyatRouter.put(
 
     }
 )
+
+prayerSurahAyatRouter.delete(
+    '',
+    query('surahId').custom(async surahId => {
+        if (SurahUtils.isSurahIdValid(surahId)) return
+
+        throw 'invalid value, surahId must be between [1 - 114]'
+    }),
+    async (
+        req: Request<ParamsDictionary, any, any, { surahId: number }>,
+        res
+    ) => {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty()) {
+            return res.status(StatusCodes.BAD_REQUEST).json({errors: errors.array()})
+        }
+
+        const userId = req.userId
+
+        try {
+            const result = await prisma.prayerSurahAyat.delete({
+                where: {
+                    userId_surahId: {
+                        userId: userId,
+                        surahId: req.query.surahId
+                    }
+                }
+            })
+            return res.json(result)
+        } catch (e) {
+            console.log(e)
+            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during deleting prayerSurahAyat")
+        }
+    }
+)
