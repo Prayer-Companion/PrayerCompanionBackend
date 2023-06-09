@@ -6,7 +6,7 @@ import {verifyIdToken} from "./middlewares/verifyToken";
 import {signInRouter} from "./routes/signIn";
 import {verifyUserCreated} from "./middlewares/verifyUserCreated";
 import path from 'path'
-import {prayerSurahAyatRouter} from "./routes/prayerSurahAyat";
+import {memorizedSurahAyatRouter} from "./routes/memorizedSurahAyat";
 import {queryParser} from "express-query-parser";
 import {quranReadingSectionsRouter} from "./routes/quranReadingSections";
 
@@ -26,7 +26,7 @@ app.use(verifyUserCreated)
 app.use('/v1', signInRouter)
 app.use('/v1', prayerTimesRouter)
 app.use('/v1', prayerStatusesRouter)
-app.use('/v1/user/prayerSurahAyat', prayerSurahAyatRouter)
+app.use('/v1/user/memorizedSurahAyat', memorizedSurahAyatRouter)
 app.use('/v1/user/quranReadingSections' , quranReadingSectionsRouter)
 
 app.listen(port, () => {

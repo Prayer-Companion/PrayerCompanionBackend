@@ -7,16 +7,16 @@ import {ParamsDictionary} from "express-serve-static-core";
 
 const prisma = new PrismaClient()
 
-export const prayerSurahAyatRouter = Router()
+export const memorizedSurahAyatRouter = Router()
 
-prayerSurahAyatRouter.get(
+memorizedSurahAyatRouter.get(
     '',
     async (req, res) => {
 
         const userId = req.userId
 
         try {
-            const queryResult = await prisma.prayerSurahAyat.findMany(
+            const queryResult = await prisma.memorizedSurahAyat.findMany(
                 {
                     where: {
                         userId: userId
@@ -35,13 +35,13 @@ prayerSurahAyatRouter.get(
             return res.json(result)
         } catch (e) {
             console.log(e)
-            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during fetching prayerSurahAyat")
+            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during fetching memorizedSurahAyat")
         }
 
     }
 )
 
-prayerSurahAyatRouter.put(
+memorizedSurahAyatRouter.put(
     '',
     query('surahId').custom(async surahId => {
         if (SurahUtils.isSurahIdValid(surahId)) return
@@ -70,7 +70,7 @@ prayerSurahAyatRouter.put(
         const userId = req.userId
 
         try {
-            const prayerSurahAyat = await prisma.prayerSurahAyat.upsert({
+            const memorizedSurahAyat = await prisma.memorizedSurahAyat.upsert({
                 where: {
                     userId_surahId: {
                         userId: userId,
@@ -93,16 +93,16 @@ prayerSurahAyatRouter.put(
                 },
             })
 
-            return res.json(prayerSurahAyat)
+            return res.json(memorizedSurahAyat)
         } catch (e) {
             console.log(e)
-            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during updating prayerSurahAyat")
+            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during updating memorizedSurahAyat")
         }
 
     }
 )
 
-prayerSurahAyatRouter.delete(
+memorizedSurahAyatRouter.delete(
     '',
     query('surahId').custom(async surahId => {
         if (SurahUtils.isSurahIdValid(surahId)) return
@@ -122,7 +122,7 @@ prayerSurahAyatRouter.delete(
         const userId = req.userId
 
         try {
-            const result = await prisma.prayerSurahAyat.delete({
+            const result = await prisma.memorizedSurahAyat.delete({
                 where: {
                     userId_surahId: {
                         userId: userId,
@@ -133,7 +133,7 @@ prayerSurahAyatRouter.delete(
             return res.json(result)
         } catch (e) {
             console.log(e)
-            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during deleting prayerSurahAyat")
+            return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during deleting memorizedSurahAyat")
         }
     }
 )

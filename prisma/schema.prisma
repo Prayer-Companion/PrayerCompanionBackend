@@ -15,7 +15,7 @@ model User {
   firebaseId String @unique
 
   prayerRecord    PrayerRecord[]
-  prayerSurahAyat PrayerSurahAyat[]
+  memorizedSurahAyat MemorizedSurahAyat[]
 }
 
 model PrayerRecord {
@@ -41,7 +41,7 @@ model PrayerStatus {
   @@unique([recordId, name])
 }
 
-model PrayerSurahAyat {
+model MemorizedSurahAyat {
   userId   Int
   surahId  Int
   startAya Int

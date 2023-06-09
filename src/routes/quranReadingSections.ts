@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {PrayerSurahAyat, PrismaClient} from "@prisma/client";
+import {MemorizedSurahAyat, PrismaClient} from "@prisma/client";
 import SurahUtils from "../utils/surahUtils";
 import {StatusCodes} from "http-status-codes";
 import {findClosestNumberIndex, getElementAt, shuffleArray} from "../utils/arrayUtils";
@@ -14,10 +14,10 @@ quranReadingSectionsRouter.get(
 
         const userId = req.userId
 
-        let queryResult: PrayerSurahAyat[]
+        let queryResult: MemorizedSurahAyat[]
 
         try {
-            queryResult = await prisma.prayerSurahAyat.findMany({
+            queryResult = await prisma.memorizedSurahAyat.findMany({
                 where: {userId: userId}
             })
         } catch (e) {
@@ -39,7 +39,7 @@ quranReadingSectionsRouter.get(
 
 
 export function getQuranReadingSections(
-    prayerSurahAyat: PrayerSurahAyat[],
+    memorizedSurahAyat: MemorizedSurahAyat[],
     numberOfSections = 6,
     numberOfCharsInSection = 170,
     thresholdRemaining = numberOfCharsInSection / 4
@@ -51,10 +51,10 @@ export function getQuranReadingSections(
     })
 
     // Get next surah from the array in circular fashion
-    const getNextSurah = (surahArray: PrayerSurahAyat[], index: number) => surahArray[index % surahArray.length];
+    const getNextSurah = (surahArray: MemorizedSurahAyat[], index: number) => surahArray[index % surahArray.length];
 
     // Reset variables for next iteration
-    const resetVariables = (surahArray: PrayerSurahAyat[], index: number) => {
+    const resetVariables = (surahArray: MemorizedSurahAyat[], index: number) => {
         const surahPart = getNextSurah(surahArray, index);
         const sectionStartIndex = surahPart.startAya - 1;
         return {surahPart, sectionStartIndex};
@@ -62,7 +62,7 @@ export function getQuranReadingSections(
 
     let sections = [];
     let arrayIndex = 0;
-    let {surahPart, sectionStartIndex} = resetVariables(prayerSurahAyat, arrayIndex);
+    let {surahPart, sectionStartIndex} = resetVariables(memorizedSurahAyat, arrayIndex);
 
     while (sections.length < numberOfSections) {
         const surahPrefixSum = SurahUtils.getSurahPrefixSum(surahPart.surahId);
@@ -91,7 +91,7 @@ export function getQuranReadingSections(
             console.log("a7a", closestNumber)
         } else { // Otherwise, reset to start with the next Surah
             arrayIndex++;
-            ({surahPart, sectionStartIndex} = resetVariables(prayerSurahAyat, arrayIndex));
+            ({surahPart, sectionStartIndex} = resetVariables(memorizedSurahAyat, arrayIndex));
         }
     }
 
