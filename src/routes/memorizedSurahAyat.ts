@@ -67,7 +67,7 @@ memorizedSurahAyatRouter.put(
         const userId = req.userId
 
         try {
-            const memorizedSurahAyat = await prisma.memorizedSurahAyat.upsert({
+            await prisma.memorizedSurahAyat.upsert({
                 where: {
                     userId_surahId: {
                         userId: userId,
@@ -90,7 +90,7 @@ memorizedSurahAyatRouter.put(
                 },
             })
 
-            return res.json(memorizedSurahAyat)
+            return res.json()
         } catch (e) {
             console.log(e)
             return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during updating memorizedSurahAyat")
@@ -119,7 +119,7 @@ memorizedSurahAyatRouter.delete(
         const userId = req.userId
 
         try {
-            const result = await prisma.memorizedSurahAyat.delete({
+            await prisma.memorizedSurahAyat.delete({
                 where: {
                     userId_surahId: {
                         userId: userId,
@@ -127,7 +127,7 @@ memorizedSurahAyatRouter.delete(
                     }
                 }
             })
-            return res.json(result)
+            return res.json()
         } catch (e) {
             console.log(e)
             return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during deleting memorizedSurahAyat")

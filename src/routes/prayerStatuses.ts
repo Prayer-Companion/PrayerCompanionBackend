@@ -1,7 +1,6 @@
 import {Request, Response, Router} from "express";
 import {ParamsDictionary} from "express-serve-static-core";
 import {query, validationResult} from "express-validator";
-import {PrayerNames, PrayerStatuses, PrismaClient} from '@prisma/client'
 import moment from "moment-timezone";
 import {daysBetween, loopBetweenDates} from "../utils/dateUtils";
 import {StatusCodes} from "http-status-codes";

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {MemorizedSurahAyat, PrismaClient} from "@prisma/client";
+import {MemorizedSurahAyat} from "@prisma/client";
 import SurahUtils from "../utils/surahUtils";
 import {StatusCodes} from "http-status-codes";
 import {findClosestNumberIndex, getElementAt, shuffleArray} from "../utils/arrayUtils";
