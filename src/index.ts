@@ -23,6 +23,10 @@ app.get('/', (req: Request, res: Response) => {
 app.use(queryParser({parseNull: true, parseUndefined: true, parseBoolean: true, parseNumber: true,}))
 app.use(verifyIdToken)
 app.use(verifyUserCreated)
+// app.use((req, res, next) => {
+//     req.userId = 1
+//     next()
+// })
 app.use('/v1', signInRouter)
 app.use('/v1', prayerTimesRouter)
 app.use('/v1', prayerStatusesRouter)
