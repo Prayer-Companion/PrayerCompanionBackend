@@ -60,6 +60,10 @@ export function getQuranReadingSections(
         return {surahPart, sectionStartIndex};
     }
 
+    if (memorizedSurahAyat.length == 0) {
+        return []
+    }
+
     let sections = [];
     let arrayIndex = 0;
     let {surahPart, sectionStartIndex} = resetVariables(memorizedSurahAyat, arrayIndex);

@@ -4,6 +4,21 @@ import {getQuranReadingSections} from "../routes/quranReadingSections";
 
 describe('getQuranReadingSections', () => {
 
+    test('1 section, 0 surah', () => {
+        const memorizedSurahAyat: { surahId: number; endAya: number; startAya: number; userId: number }[] = []
+
+        const actual = getQuranReadingSections(
+            memorizedSurahAyat,
+            1,
+            170,
+            170 / 4
+        )
+
+        const expected: { surahId: number; endAya: number; startAya: number }[] = []
+
+        expect(actual).toStrictEqual(expected)
+    })
+
     test('1 section, 1 surah that is shorter than numberOfCharsInSection', () => {
         const memorizedSurahAyat = [
             {userId: 1, surahId: 1, startAya: 1, endAya: 7},
