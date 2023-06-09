@@ -16,7 +16,7 @@ export const prayerTimesRouter = Router()
 const dateFormat = 'DD/MM/YYYY'
 const timeFormat = 'HH:mm'
 
-prayerTimesRouter.get('/prayerTimes',
+prayerTimesRouter.get('',
     query('timeZone').custom(validateTimeZone),
     query('latitude').isNumeric(),
     query('longitude').isNumeric(),

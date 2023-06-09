@@ -1,11 +1,8 @@
 import {Request, Router} from "express";
-import {PrismaClient} from "@prisma/client";
 import {query, validationResult} from "express-validator";
 import {StatusCodes} from "http-status-codes";
 import SurahUtils from "../utils/surahUtils";
 import {ParamsDictionary} from "express-serve-static-core";
-
-const prisma = new PrismaClient()
 
 export const memorizedSurahAyatRouter = Router()
 

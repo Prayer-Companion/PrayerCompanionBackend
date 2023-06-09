@@ -9,29 +9,42 @@ import path from 'path'
 import {memorizedSurahAyatRouter} from "./routes/memorizedSurahAyat";
 import {queryParser} from "express-query-parser";
 import {quranReadingSectionsRouter} from "./routes/quranReadingSections";
+import {prayerStatusRouter} from "./routes/prayerStatus";
+import {dev} from "./middlewares/dev";
+import {PrismaClient} from "@prisma/client";
 
-global.appRoot = path.resolve('./')
+//Envs
 dotenv.config();
+const port = process.env.PORT;
+const isDevelopment = process.env.NODE_ENV == 'dev';
+
+//Globals
+global.appRoot = path.resolve('./')
+global.prisma = new PrismaClient()
+
 
 const app: Express = express();
-const port = process.env.PORT;
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Express + TypeScript Server');
-});
-
+//Query parser
 app.use(queryParser({parseNull: true, parseUndefined: true, parseBoolean: true, parseNumber: true,}))
-app.use(verifyIdToken)
+
+//Authentication
+if (isDevelopment) {
+    console.log("============== Dev Environment ==============")
+    app.use(dev)
+} else {
+    app.use(verifyIdToken)
+}
+
 app.use(verifyUserCreated)
-// app.use((req, res, next) => {
-//     req.userId = 1
-//     next()
-// })
-app.use('/v1', signInRouter)
-app.use('/v1', prayerTimesRouter)
-app.use('/v1', prayerStatusesRouter)
+
+//Routes
+app.use('/v1/user/signIn', signInRouter)
+app.use('/v1/prayerTimes', prayerTimesRouter)
+app.use('/v1/user/prayerStatus', prayerStatusRouter)
+app.use('/v1/user/prayerStatuses', prayerStatusesRouter)
 app.use('/v1/user/memorizedSurahAyat', memorizedSurahAyatRouter)
-app.use('/v1/user/quranReadingSections' , quranReadingSectionsRouter)
+app.use('/v1/user/quranReadingSections', quranReadingSectionsRouter)
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

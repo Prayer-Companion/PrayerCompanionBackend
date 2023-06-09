@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "dev_win": "set NODE_ENV=dev&& concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "dev_linux": "NODE_ENV=dev concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
     "test:unit-windows": "SET ENVFILE=./.env.test jest"
   },
   "author": "",

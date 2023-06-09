@@ -6,8 +6,6 @@ import {findClosestNumberIndex, getElementAt, shuffleArray} from "../utils/array
 
 export const quranReadingSectionsRouter = Router()
 
-const prisma = new PrismaClient()
-
 quranReadingSectionsRouter.get(
     '',
     async (req, res) => {
@@ -92,7 +90,6 @@ export function getQuranReadingSections(
         // If there are remaining characters, continue in current Surah
         if (remainingChars > 0) {
             sectionStartIndex = sectionEndIndex + 1;
-            console.log("a7a", closestNumber)
         } else { // Otherwise, reset to start with the next Surah
             arrayIndex++;
             ({surahPart, sectionStartIndex} = resetVariables(memorizedSurahAyat, arrayIndex));

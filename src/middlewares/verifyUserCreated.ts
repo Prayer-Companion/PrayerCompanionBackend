@@ -1,12 +1,9 @@
 import {NextFunction, Response, Request} from "express";
 
-import {PrismaClient} from "@prisma/client";
 import {StatusCodes} from "http-status-codes";
 
-const prisma = new PrismaClient()
-
 export const verifyUserCreated = async (req: Request, res: Response, next: NextFunction) => {
-    if (req.path == '/v1/user/signIn') {
+    if (req.path === '/v1/user/signIn') {
         return next()
     }
 
