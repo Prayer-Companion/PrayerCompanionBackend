@@ -138,11 +138,11 @@ describe('getQuranReadingSections', () => {
         )
 
 
-        const expected = Array(2).fill({
+        const expected = [{
             "surahId": memorizedSurahAyat[0].surahId,
             "startAya": memorizedSurahAyat[0].startAya,
             "endAya": memorizedSurahAyat[0].endAya
-        })
+        }]
 
         expect(actual).toStrictEqual(expected)
     })
@@ -160,11 +160,11 @@ describe('getQuranReadingSections', () => {
         )
 
 
-        const expected = Array(2).fill({
+        const expected = [{
             "surahId": memorizedSurahAyat[0].surahId,
             "startAya": memorizedSurahAyat[0].startAya,
             "endAya": memorizedSurahAyat[0].endAya
-        })
+        }]
 
         expect(actual).toStrictEqual(expected)
     })
@@ -232,7 +232,7 @@ describe('getQuranReadingSections', () => {
             2,
             170,
             170 / 2,
-            170 /3
+            170 / 3
         )
 
         const expected = [

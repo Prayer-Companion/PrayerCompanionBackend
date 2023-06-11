@@ -41,7 +41,7 @@ quranReadingSectionsRouter.get(
 
 export function getQuranReadingSections(
     memorizedSurahAyat: MemorizedSurahAyat[],
-    numberOfSections = 20,
+    maximumNumberOfSections = 20,
     numberOfCharsInSection = 170,
     thresholdRemaining = numberOfCharsInSection / 2,
     thresholdClosestNumber = numberOfCharsInSection / 3,
@@ -52,25 +52,12 @@ export function getQuranReadingSections(
         'endAya': sectionEndIndex + 1,
     })
 
-    // Get next surah from the array in circular fashion
-    const getNextSurah = (surahArray: MemorizedSurahAyat[], index: number) => surahArray[index % surahArray.length];
-
-    // Reset variables for next iteration
-    const resetVariables = (surahArray: MemorizedSurahAyat[], index: number) => {
-        const surahPart = getNextSurah(surahArray, index);
-        const sectionStartIndex = surahPart.startAya - 1;
-        return {surahPart, sectionStartIndex};
-    }
-
-    if (memorizedSurahAyat.length == 0) {
-        return []
-    }
-
     let sections = [];
     let arrayIndex = 0;
-    let {surahPart, sectionStartIndex} = resetVariables(memorizedSurahAyat, arrayIndex);
+    let surahPart = memorizedSurahAyat[arrayIndex]
+    let sectionStartIndex = surahPart?.startAya - 1
 
-    while (sections.length < numberOfSections) {
+    while (surahPart != null && sections.length < maximumNumberOfSections) {
         const surahPrefixSum = SurahUtils.getSurahPrefixSum(surahPart.surahId);
         const closestNumber = numberOfCharsInSection + getElementAt(surahPrefixSum, sectionStartIndex - 1, 0)
 
@@ -101,8 +88,8 @@ export function getQuranReadingSections(
         if (remainingChars > 0) {
             sectionStartIndex = sectionEndIndex + 1;
         } else { // Otherwise, reset to start with the next Surah
-            arrayIndex++;
-            ({surahPart, sectionStartIndex} = resetVariables(memorizedSurahAyat, arrayIndex));
+            surahPart = memorizedSurahAyat[++arrayIndex]
+            sectionStartIndex = surahPart?.startAya - 1
         }
     }
 
