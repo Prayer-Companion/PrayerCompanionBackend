@@ -25,7 +25,7 @@ quranReadingSectionsRouter.get(
 
 
         //Remove Al-Fatiha
-        const alFatihaIndex = queryResult.findIndex(value => value.surahId = 1)
+        const alFatihaIndex = queryResult.findIndex(value => value.surahId == 1)
 
         if (alFatihaIndex >= 0) {
             queryResult.splice(alFatihaIndex, 1)
