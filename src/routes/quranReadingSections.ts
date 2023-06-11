@@ -23,6 +23,14 @@ quranReadingSectionsRouter.get(
             return res.status(StatusCodes.BAD_REQUEST).json("Something went wrong during fetching quranReadingSection")
         }
 
+
+        //Remove Al-Fatiha
+        const alFatihaIndex = queryResult.findIndex(value => value.surahId = 1)
+
+        if (alFatihaIndex >= 0){
+            queryResult.splice(alFatihaIndex , 1)
+        }
+
         const userSuarShuffled = shuffleArray(queryResult)
 
         const result = getQuranReadingSections(
