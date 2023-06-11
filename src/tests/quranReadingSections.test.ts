@@ -201,36 +201,8 @@ describe('getQuranReadingSections', () => {
             memorizedSurahAyat,
             2,
             170,
-            170 / 4
-        )
-
-        const expected = [
-            {
-                "surahId": memorizedSurahAyat[0].surahId,
-                "startAya": memorizedSurahAyat[0].startAya,
-                "endAya": memorizedSurahAyat[0].endAya
-            },
-            {
-                "surahId": memorizedSurahAyat[1].surahId,
-                "startAya": memorizedSurahAyat[1].startAya,
-                "endAya": 4
-            }
-        ]
-
-        expect(actual).toStrictEqual(expected)
-    })
-
-    test('2 sections, 2 suar (both start from aya 3)', () => {
-        const memorizedSurahAyat = [
-            {userId: 1, surahId: 1, startAya: 3, endAya: 7},
-            {userId: 1, surahId: 2, startAya: 3, endAya: 7},
-        ]
-
-        const actual = getQuranReadingSections(
-            memorizedSurahAyat,
-            2,
-            170,
-            170 / 4
+            170 / 2,
+            170 / 3
         )
 
         const expected = [
@@ -249,6 +221,36 @@ describe('getQuranReadingSections', () => {
         expect(actual).toStrictEqual(expected)
     })
 
+    test('2 sections, 2 suar (both start from aya 3)', () => {
+        const memorizedSurahAyat = [
+            {userId: 1, surahId: 1, startAya: 3, endAya: 7},
+            {userId: 1, surahId: 2, startAya: 3, endAya: 7},
+        ]
+
+        const actual = getQuranReadingSections(
+            memorizedSurahAyat,
+            2,
+            170,
+            170 / 2,
+            170 /3
+        )
+
+        const expected = [
+            {
+                "surahId": memorizedSurahAyat[0].surahId,
+                "startAya": memorizedSurahAyat[0].startAya,
+                "endAya": memorizedSurahAyat[0].endAya
+            },
+            {
+                "surahId": memorizedSurahAyat[1].surahId,
+                "startAya": memorizedSurahAyat[1].startAya,
+                "endAya": 7
+            }
+        ]
+
+        expect(actual).toStrictEqual(expected)
+    })
+
 
     test('3 sections, 3 suar (all start from aya 1)', () => {
         const memorizedSurahAyat = [
@@ -261,7 +263,8 @@ describe('getQuranReadingSections', () => {
             memorizedSurahAyat,
             3,
             170,
-            170 / 4
+            170 / 2,
+            170 / 3
         )
 
         const expected = [
@@ -278,7 +281,7 @@ describe('getQuranReadingSections', () => {
             {
                 "surahId": memorizedSurahAyat[2].surahId,
                 "startAya": memorizedSurahAyat[2].startAya,
-                "endAya": 3
+                "endAya": 4
             }
         ]
 
@@ -296,7 +299,8 @@ describe('getQuranReadingSections', () => {
             memorizedSurahAyat,
             3,
             170,
-            170 / 4
+            170 / 2,
+            170 / 3
         )
 
         const expected = [
@@ -331,7 +335,8 @@ describe('getQuranReadingSections', () => {
             memorizedSurahAyat,
             3,
             170,
-            170 / 4
+            170 / 2,
+            170 / 3
         )
 
         const expected = [

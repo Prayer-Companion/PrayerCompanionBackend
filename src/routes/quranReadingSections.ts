@@ -27,18 +27,13 @@ quranReadingSectionsRouter.get(
         //Remove Al-Fatiha
         const alFatihaIndex = queryResult.findIndex(value => value.surahId = 1)
 
-        if (alFatihaIndex >= 0){
-            queryResult.splice(alFatihaIndex , 1)
+        if (alFatihaIndex >= 0) {
+            queryResult.splice(alFatihaIndex, 1)
         }
 
         const userSuarShuffled = shuffleArray(queryResult)
 
-        const result = getQuranReadingSections(
-            userSuarShuffled,
-            3,
-            170,
-            170 / 4
-        )
+        const result = getQuranReadingSections(userSuarShuffled)
 
         res.json(result)
     })
@@ -46,9 +41,10 @@ quranReadingSectionsRouter.get(
 
 export function getQuranReadingSections(
     memorizedSurahAyat: MemorizedSurahAyat[],
-    numberOfSections = 6,
+    numberOfSections = 20,
     numberOfCharsInSection = 170,
-    thresholdRemaining = numberOfCharsInSection / 4
+    thresholdRemaining = numberOfCharsInSection / 2,
+    thresholdClosestNumber = numberOfCharsInSection / 3,
 ) {
     const createSection = (surahId: number, sectionStartIndex: number, sectionEndIndex: number) => ({
         'surahId': surahPart.surahId,
@@ -85,11 +81,17 @@ export function getQuranReadingSections(
             surahPart.endAya
         );
 
+        const searchResult = surahPrefixSum[sectionEndIndex]
+
+        if (searchResult < closestNumber && closestNumber - searchResult < thresholdClosestNumber && sectionEndIndex + 1 < surahPart.endAya) {
+            sectionEndIndex++
+        }
+
         let remainingChars = surahPrefixSum[surahPart.endAya - 1] - surahPrefixSum[sectionEndIndex];
 
         // If remaining characters are below the threshold, use all remaining characters
         if (remainingChars > 0 && remainingChars <= thresholdRemaining) {
-            sectionEndIndex = Math.min(surahPart.endAya) - 1;
+            sectionEndIndex = surahPart.endAya - 1;
             remainingChars = 0;
         }
 
