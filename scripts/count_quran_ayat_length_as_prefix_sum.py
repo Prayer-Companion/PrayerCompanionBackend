@@ -1,28 +1,29 @@
 import re
-import itertools
 import json
+import xmltodict
 
-suar = [[] for _ in range(114)]
-suar_prefix_sum = [[] for _ in range(114)]
+# load the xml file
+with open('quran.xml', 'r', encoding='utf-8') as file:
+    xml_string = file.read()
 
-with open('quran.txt', encoding='utf-8') as file:
-    while line := file.readline():
-        # Meta data
-        splitLine = line.split("|")
-        suraIndex = int(splitLine[0]) - 1
-        ayaIndex = int(splitLine[1]) - 1
+# parse the xml string to a python dictionary
+data_dict = xmltodict.parse(xml_string)
 
-        line = re.sub(r'[^ءأ-ي آ]', '', line)
+output = []
 
-        ayaLength = len(line)
-        suar[suraIndex].append(ayaLength)
+for sura in data_dict['quran']['sura']:
+    prefix_sum = 0
+    sura_prefix_sums = []
+    for aya in sura['aya']:
+        # apply the regex
+        cleaned_text = re.sub('[^ءأ-ي آ]', '', aya['@text'])
+        # update the prefix sum
+        prefix_sum += len(cleaned_text)
+        # append the prefix sum to the sura prefix sums
+        sura_prefix_sums.append(prefix_sum)
+    # append the sura prefix sums to the output
+    output.append(sura_prefix_sums)
 
-    suar_prefix_sum = suar.copy()
-
-    for i in range(len(suar_prefix_sum)):
-
-        suar_prefix_sum[i] = list(itertools.accumulate(suar_prefix_sum[i]))
-
-    with open('output.json', 'w') as file:
-        # file.write(','.join(suar_prefix_sum))
-        json.dump(suar_prefix_sum, file)
+# write the output to a json file
+with open('output.json', 'w', encoding='utf-8') as file:
+    json.dump(output, file, ensure_ascii=False)
