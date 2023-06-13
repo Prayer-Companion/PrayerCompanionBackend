@@ -46,7 +46,7 @@ app.use('/v1/user/prayerStatuses', prayerStatusesRouter)
 app.use('/v1/user/memorizedSurahAyat', memorizedSurahAyatRouter)
 app.use('/v1/user/quranReadingSections', quranReadingSectionsRouter)
 
-app.use(express.static(path.join(appRoot , 'public')))
+app.use('/public' , express.static(path.join(appRoot , 'public')))
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

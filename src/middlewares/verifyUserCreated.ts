@@ -3,7 +3,7 @@ import {NextFunction, Response, Request} from "express";
 import {StatusCodes} from "http-status-codes";
 
 export const verifyUserCreated = async (req: Request, res: Response, next: NextFunction) => {
-    if (req.path === '/v1/user/signIn') {
+    if (req.path === '/v1/user/signIn' || req.path.startsWith('/public/')) {
         return next()
     }
 

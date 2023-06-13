@@ -4,6 +4,10 @@ import fire from "../firebaseAdmin";
 import {StatusCodes} from "http-status-codes";
 
 export const verifyIdToken = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/public/')){
+        return next()
+    }
+
     const token = getTokenFromRequestHeader(req)
 
     if (!token) {
