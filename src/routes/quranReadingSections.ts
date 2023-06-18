@@ -41,7 +41,7 @@ quranReadingSectionsRouter.get(
 
 export function getQuranReadingSections(
     memorizedSurahAyat: MemorizedSurahAyat[],
-    maximumNumberOfSections = 20,
+    maximumNumberOfSections = 50,
     numberOfCharsInSection = 170,
     thresholdRemaining = numberOfCharsInSection / 2,
     thresholdClosestNumber = numberOfCharsInSection / 3,
