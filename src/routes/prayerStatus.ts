@@ -8,10 +8,16 @@ import moment from "moment-timezone";
 export const prayerStatusRouter = Router()
 
 const dateFormat = 'DD/MM/YYYY'
+const dateTimeFormat = 'DD/MM/YYYY HH:mm:ss'
 
 prayerStatusRouter.put(
     '',
-    query('date').isDate({format: dateFormat}),
+    query('date').isDate({format: dateTimeFormat}).custom( async (value) => {
+        const isValid = moment(value, dateTimeFormat).isBefore(moment());
+        if (!isValid) {
+            throw new Error('The date should not be in the future');
+        }
+    }),
     query('prayerName').custom(async value => {
         if (!(value in PrayerNames)) {
             throw new Error('invalid value')
