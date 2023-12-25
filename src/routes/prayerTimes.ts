@@ -65,7 +65,7 @@ async function getStoredDailyPrayerTimes(countryCode: string, cityName: string, 
     const safeCountryCode = sanitize(countryCode);
     const safeCityName = sanitize(cityName);
 
-    const filePath = `${appRoot}/prayerTimes/${safeCountryCode}/${safeCityName}.csv`
+    const filePath = `${appRoot}/prayerTimes/${startDate.year}/${safeCountryCode}/${safeCityName}.csv`
 
 
     console.log(filePath)
