@@ -1,9 +1,10 @@
 import {Request, Router} from "express";
-import {query, validationResult} from "express-validator";
+import {header, query, validationResult} from "express-validator";
 import {PrayerNames, PrayerStatuses} from "@prisma/client";
 import {ParamsDictionary} from "express-serve-static-core";
 import {StatusCodes} from "http-status-codes";
 import moment from "moment-timezone";
+import {validateDateTime, validateTimeZone} from "../customValidators";
 
 export const prayerStatusRouter = Router()
 
@@ -11,7 +12,8 @@ const dateFormat = 'DD/MM/YYYY'
 
 prayerStatusRouter.put(
     '',
-    query('date').isDate({format: dateFormat}),
+    header('timeZone').custom(validateTimeZone),
+    query('date').custom( validateDateTime),
     query('prayerName').custom(async value => {
         if (!(value in PrayerNames)) {
             throw new Error('invalid value')
@@ -24,6 +26,7 @@ prayerStatusRouter.put(
     }),
     async (
         req: Request<ParamsDictionary, any, any, {
+            timeZone: string
             date: string
             prayerName: PrayerNames,
             prayerStatus: PrayerStatuses

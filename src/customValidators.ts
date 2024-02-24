@@ -35,3 +35,19 @@ export const countryCodeOrNullValidator: CustomValidator = async (countryCode, m
 
     await countryCodeValidator(countryCode, meta)
 }
+
+
+export const validateDateTime: CustomValidator = async (value, { req}) => {
+    const dateFormat = 'DD/MM/YYYY'
+    const dateTimeFormat = 'DD/MM/YYYY HH:mm:ss'
+
+    const isDateOnly = moment(value, dateFormat, true).isValid();
+    if (!isDateOnly) {
+        const isValid =
+            moment(value, dateTimeFormat, true).isValid() &&
+            moment(value, dateTimeFormat).isBefore(moment.tz(req?.headers?.timeZone))
+        if (!isValid) {
+            throw new Error('The date should not be in the future');
+        }
+    }
+}
